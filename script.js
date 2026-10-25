@@ -49,7 +49,7 @@ const norm=s=>s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
 const UM='<svg viewBox="0 0 30 12" aria-hidden="true"><circle cx="15" cy="6" r="4.2" fill="currentColor"/></svg>';
 const DOIS='<svg viewBox="0 0 30 12" aria-hidden="true"><circle cx="9" cy="6" r="4.2" fill="currentColor"/><circle cx="21" cy="6" r="4.2" fill="currentColor"/></svg>';
 
-let estado={maes:EXEMPLO.map(l=>l.slice()),regra:'usuario'};
+let estado={maes:EXEMPLO.map(l=>l.slice()),regra:'usuario',pergunta:''};
 let REG={};
 let ultimoFoco=null;
 
@@ -61,6 +61,7 @@ function carregar(){
     const ok=Array.isArray(d.maes)&&d.maes.length===4&&d.maes.every(l=>Array.isArray(l)&&l.length===4&&l.every(v=>v===1||v===2||v===null));
     if(ok){estado.maes=d.maes;}
     if(d.regra==='classica'||d.regra==='usuario'){estado.regra=d.regra;}
+    if(typeof d.pergunta==='string'){estado.pergunta=d.pergunta.slice(0,300);}
   }catch(_){}
 }
 function salvar(){
@@ -214,10 +215,49 @@ function filtrar(){
   $('#cat-vazio').hidden=n>0;
 }
 
+function renderPergunta(){
+  const q=estado.pergunta.trim();
+  $('#mapa-pergunta').hidden=!q;
+  $('#mapa-pergunta-txt').textContent=q;
+  $('#pergunta-cont').textContent=`${estado.pergunta.length} / 300`;
+}
+
+async function salvarImagem(){
+  const btn=$('#btn-foto'),av=$('#aviso-img');
+  const aviso=t=>{av.textContent=t;setTimeout(()=>{av.textContent='';},2600);};
+  if(typeof html2canvas!=='function'){aviso('Biblioteca de imagem não carregou');return;}
+  btn.disabled=true;av.textContent='Gerando…';
+  try{
+    if(document.fonts&&document.fonts.ready){await document.fonts.ready;}
+    const alvo=$('#captura');
+    const bg=getComputedStyle(document.body).backgroundColor;
+    const canvas=await html2canvas(alvo,{backgroundColor:bg,scale:Math.max(2,window.devicePixelRatio||1),useCORS:true,logging:false});
+    const blob=await new Promise(res=>canvas.toBlob(res,'image/png'));
+    if(!blob) throw new Error('sem imagem');
+    const arq=new File([blob],'mapa-geomantico.png',{type:'image/png'});
+    if(navigator.canShare&&navigator.canShare({files:[arq]})&&/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)){
+      try{await navigator.share({files:[arq],title:'Mapa geomântico'});aviso('Imagem pronta');return;}
+      catch(err){if(err&&err.name==='AbortError'){av.textContent='';return;}}
+    }
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;a.download='mapa-geomantico.png';
+    document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),1000);
+    aviso('Imagem salva');
+  }catch(_){
+    aviso('Não foi possível gerar a imagem');
+  }finally{
+    btn.disabled=false;
+  }
+}
+
 function textoLeitura(N){
   const nm=n=>{const f=figura(n.l);return f?f.nome:'—';};
+  const q=estado.pergunta.trim();
   return [
     'Mapa geomântico',
+    ...(q?['Pergunta: '+q]:[]),
     'Mães: '+N.M.map(nm).join(', '),
     'Tias: '+N.T.map(nm).join(', '),
     'Filhas: '+N.F.map(nm).join(', '),
@@ -273,6 +313,7 @@ function render(){
   const r=calcular(estado.maes,estado.regra);
   const N=nos(r);
   renderRegra();
+  renderPergunta();
   renderLeitura(N);
   renderMapa(N);
   renderCatalogo(N);
@@ -304,6 +345,10 @@ document.addEventListener('click',async e=>{
   if(t.closest('[data-close]')){fechar();return;}
   if(t.closest('#btn-exemplo')){estado.maes=EXEMPLO.map(l=>l.slice());mudou();return;}
   if(t.closest('#btn-limpar')){estado.maes=[0,1,2,3].map(()=>[null,null,null,null]);mudou();return;}
+  if(t.closest('#btn-foto')){
+    if(!$('#btn-foto').disabled){salvarImagem();}
+    return;
+  }
   if(t.closest('#btn-copiar')){
     const btn=$('#btn-copiar');
     if(btn.disabled) return;
@@ -324,9 +369,16 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&!$('#sheet').hidden){fechar();}
 });
 $('#busca').addEventListener('input',filtrar);
+$('#pergunta').addEventListener('input',e=>{
+  estado.pergunta=e.target.value;
+  salvar();
+  renderPergunta();
+  $('#btn-copiar').dataset.texto=textoLeitura(nos(calcular(estado.maes,estado.regra)));
+});
 
 montarMaes();
 carregar();
+$('#pergunta').value=estado.pergunta;
 syncMaes();
 render();
 })();

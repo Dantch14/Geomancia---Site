@@ -19,6 +19,18 @@
 </header>
 
 <main>
+  <section class="sec" aria-labelledby="h-pergunta">
+    <div class="wrap">
+      <h2 id="h-pergunta">A pergunta</h2>
+      <p class="sub">Escreva a pergunta feita para esta tiragem. Ela aparece no mapa completo e na imagem salva.</p>
+      <div class="pergunta">
+        <label for="pergunta" class="vh">Pergunta da tiragem</label>
+        <textarea id="pergunta" rows="2" maxlength="300" placeholder="Ex.: Devo aceitar a proposta de trabalho?"></textarea>
+        <span class="status" id="pergunta-cont">0 / 300</span>
+      </div>
+    </div>
+  </section>
+
   <section class="sec" aria-labelledby="h-maes">
     <div class="wrap">
       <h2 id="h-maes">As quatro mães</h2>
@@ -43,15 +55,29 @@
 
   <section class="sec" aria-labelledby="h-mapa">
     <div class="wrap">
-      <h2 id="h-mapa">Mapa completo</h2>
-      <p class="sub">As 15 figuras, da tiragem até o conselho. Toque numa figura para ver o significado.</p>
-      <div class="regra" style="margin-top:16px">
+      <div class="sec-head">
+        <div>
+          <h2 id="h-mapa">Mapa completo</h2>
+          <p class="sub">As 15 figuras, da tiragem até o conselho. Toque numa figura para ver o significado.</p>
+        </div>
+        <div class="sec-act">
+          <span class="status" id="aviso-img" role="status"></span>
+          <button type="button" class="btn" id="btn-foto">Salvar imagem</button>
+        </div>
+      </div>
+      <div class="regra">
         <div class="seg" role="radiogroup" aria-labelledby="regra-t">
         </div>
         <p class="regra-nota" id="regra-nota"></p>
       </div>
-      <div id="mapa"></div>
-      <p class="soma">Soma de linhas: ímpar + par = ímpar · ímpar + ímpar = par · par + par = par</p>
+      <div id="captura" class="captura">
+        <div class="mapa-pergunta" id="mapa-pergunta" hidden>
+          <div class="mapa-pergunta-rot">Pergunta</div>
+          <p id="mapa-pergunta-txt"></p>
+        </div>
+        <div id="mapa"></div>
+        <p class="soma">Soma de linhas: ímpar + par = ímpar · ímpar + ímpar = par · par + par = par</p>
+      </div>
     </div>
   </section>
 
@@ -94,6 +120,7 @@
   </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
