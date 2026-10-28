@@ -73,11 +73,11 @@ function figura(l){const i=indiceFig(l);return i>=0?FIGURAS[i]:null;}
 function tile(l){
   const f=figura(l);
   let s='<svg class="tile" viewBox="0 0 64 88" aria-hidden="true" focusable="false">';
-  s+=f?`<rect width="64" height="88" rx="5" fill="${f.cor}"/>`:'<rect class="tile-vazio" width="64" height="88" rx="5"/>';
+  s+=f?`<rect x="1" y="1" width="62" height="86" rx="5" fill="${f.cor}" stroke="#1B2050" stroke-opacity=".45" stroke-width="2"/>`:'<rect class="tile-vazio" width="64" height="88" rx="5"/>';
   l.forEach((v,r)=>{
     const y=16+r*20;
-    if(v===1){s+=`<circle class="dot" cx="32" cy="${y}" r="6"/>`;}
-    else if(v===2){s+=`<circle class="dot" cx="20" cy="${y}" r="6"/><circle class="dot" cx="44" cy="${y}" r="6"/>`;}
+    if(v===1){s+=`<circle class="dot" cx="32" cy="${y}" r="8"/>`;}
+    else if(v===2){s+=`<circle class="dot" cx="18" cy="${y}" r="8"/><circle class="dot" cx="46" cy="${y}" r="8"/>`;}
     else{s+=`<circle class="dot-vazio" cx="32" cy="${y}" r="4.5"/>`;}
   });
   return s+'</svg>';
@@ -152,28 +152,41 @@ function renderLeitura(N){
   }).join('');
 }
 
-function celula(n){
+function celula(n,linha,col){
   const f=figura(n.l);
-  return `<button type="button" class="cell ${n.papel==='Juiz'?'juiz':''}" data-open="${n.id}" ${f?'':'disabled'} aria-label="${n.rot}: ${f?f.nome:'ainda sem figura'}">
+  const cls='cell'+(n.papel==='Juiz'?' juiz':'')+(n.papel==='Conselho'?' conselho':'')+(n.papel==='Tia 4'?' sep-e':'')+(n.papel==='Mãe 1'?' sep-d':'');
+  return `<button type="button" class="${cls}" style="grid-row:${linha};grid-column:${col} / span 2" data-open="${n.id}" ${f?'':'disabled'} aria-label="${n.rot}: ${f?f.nome:'ainda sem figura'}">
+    <span class="cell-rot">${n.papel}</span>
     ${tile(n.l)}
-    <span><span class="cell-rot">${n.rot}</span><span class="cell-nome">${f?f.nome:'—'}</span><span class="cell-f">${n.f}</span></span>
+    <span class="cell-nome">${f?f.nome:'—'}</span>
+    <span class="cell-f">${n.f}</span>
   </button>`;
 }
+/* Escudo Geomântico em grade de 16 colunas (cada casa ocupa 2).
+   Direita: mães e, abaixo, as filhas. Esquerda: tias e, abaixo, as sobrinhas.
+   Cada grupo é lido da esquerda para a direita (1ª, 2ª, 3ª, 4ª).
+   Depois: Futuro (esquerda), Juiz (centro) e Passado (direita); o Conselho fica na ponta. */
 function renderMapa(N){
-  const tiers=[
-    ['Mães','A tiragem física, nas quatro posições.',N.M],
-    ['Tias','Cada tia reúne uma mesma linha das quatro mães: Ar, Fogo, Água e Terra.',N.T],
-    ['Filhas','Somas das mães, duas a duas.',N.F],
-    ['Sobrinhas','Somas das tias, duas a duas.',N.S],
-    ['Passado e Futuro','O passado soma as filhas. O futuro soma as sobrinhas.',[N.P,N.FU]],
-    ['Juiz','Passado mais Futuro.',[N.J]],
-    ['Conselho',estado.regra==='classica'?'1ª filha mais o Passado.':'1ª filha mais o Passado.',[N.C]]
+  const pos=[
+    [N.T[0],1,1],[N.T[1],1,3],[N.T[2],1,5],[N.T[3],1,7],
+    [N.M[0],1,9],[N.M[1],1,11],[N.M[2],1,13],[N.M[3],1,15],
+    [N.S[0],2,2],[N.S[1],2,6],
+    [N.F[0],2,10],[N.F[1],2,14],
+    [N.FU,3,4],[N.J,3,8],[N.P,3,12],
+    [N.C,4,8]
   ];
-  $('#mapa').innerHTML=tiers.map(([t,nota,lista])=>`
-    <div class="tier">
-      <div class="tier-head"><h3>${t}</h3><p>${nota}</p></div>
-      <div class="cells">${lista.map(celula).join('')}</div>
-    </div>`).join('');
+  const cel=pos.map(([n,r,c])=>celula(n,r,c)).join('');
+  $('#mapa').innerHTML=`<div class="escudo"><svg class="escudo-borda" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M0 0H100V50C100 78 74 90 50 100C26 90 0 78 0 50Z"/></svg><div class="escudo-grade">${cel}</div></div>`;
+  const notas=[
+    ['Mães','A tiragem física, nas quatro posições. Ficam à direita, da 1ª à 4ª, lidas da esquerda para a direita.'],
+    ['Tias','Cada tia reúne uma mesma linha das quatro mães: Ar, Fogo, Água e Terra. Ficam à esquerda, da 1ª à 4ª.'],
+    ['Filhas','Somas das mães, duas a duas.'],
+    ['Sobrinhas','Somas das tias, duas a duas.'],
+    ['Passado e Futuro','O passado (à direita) soma as filhas. O futuro (à esquerda) soma as sobrinhas.'],
+    ['Juiz','Passado mais Futuro.'],
+    ['Conselho','1ª filha mais o Passado.']
+  ];
+  $('#mapa-notas').innerHTML='<p class="escudo-dica">No Escudo Geomântico, as mães e as filhas ficam à direita, e as tias e as sobrinhas à esquerda. Em cada grupo, a ordem vai da esquerda para a direita: 1ª, 2ª, 3ª e 4ª.</p><dl>'+notas.map(([t,x])=>`<div><dt>${t}</dt><dd>${x}</dd></div>`).join('')+'</dl>';
 }
 
 function renderRegra(){
@@ -229,19 +242,56 @@ async function salvarImagem(){
   btn.disabled=true;av.textContent='Gerando…';
   try{
     if(document.fonts&&document.fonts.ready){await document.fonts.ready;}
-    const alvo=$('#captura');
+    $('#foto-rodape').textContent='Escudo Geomântico · '+new Date().toLocaleDateString('pt-BR');
     const bg=getComputedStyle(document.body).backgroundColor;
-    const canvas=await html2canvas(alvo,{backgroundColor:bg,scale:Math.max(2,window.devicePixelRatio||1),useCORS:true,logging:false});
+    /* a imagem sai sempre com a mesma largura e proporção, no celular ou no computador.
+       A captura usa uma cópia fora da tela, com o layout da imagem já aplicado e medido. */
+    const LARGURA=820;
+    const orig=$('#captura');
+    const c=orig.cloneNode(true);
+    c.removeAttribute('id');
+    c.classList.add('foto');
+    c.style.cssText='position:absolute;left:-10000px;top:0;width:'+LARGURA+'px;margin:0;';
+    const mp=$('#mapa',c);if(mp){mp.style.overflow='visible';}
+    document.body.appendChild(c);
+    let canvas;
+    try{
+      /* SVGs viram imagem na captura e perdem o CSS da página: resolve as cores para valores fixos */
+      c.querySelectorAll('svg [class]').forEach(el=>{
+        const cs=getComputedStyle(el);
+        ['fill','stroke','stroke-width','stroke-dasharray'].forEach(p=>{
+          const v=cs.getPropertyValue(p);
+          if(v){el.setAttribute(p,v);}
+        });
+      });
+      /* borda do escudo em pixels reais, medida no layout final, sem esticar o desenho */
+      const esc=$('.escudo',c),sv=$('.escudo-borda',c);
+      if(esc&&sv){
+        const w=esc.offsetWidth,h=esc.offsetHeight,m=2;
+        sv.setAttribute('viewBox','0 0 '+w+' '+h);
+        sv.setAttribute('preserveAspectRatio','none');
+        const p=$('path',sv);
+        p.setAttribute('d',`M${m} ${m}H${w-m}V${h*.5}C${w-m} ${h*.78} ${w*.74} ${h*.9} ${w/2} ${h-m}C${w*.26} ${h*.9} ${m} ${h*.78} ${m} ${h*.5}Z`);
+        p.setAttribute('stroke-width','2.5');
+        p.removeAttribute('vector-effect');
+      }
+      canvas=await html2canvas(c,{
+        backgroundColor:bg,scale:3,useCORS:true,logging:false,
+        windowWidth:1100,windowHeight:1600,scrollX:0,scrollY:0
+      });
+    }finally{
+      c.remove();
+    }
     const blob=await new Promise(res=>canvas.toBlob(res,'image/png'));
     if(!blob) throw new Error('sem imagem');
-    const arq=new File([blob],'mapa-geomantico.png',{type:'image/png'});
+    const arq=new File([blob],'escudo-geomantico.png',{type:'image/png'});
     if(navigator.canShare&&navigator.canShare({files:[arq]})&&/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)){
-      try{await navigator.share({files:[arq],title:'Mapa geomântico'});aviso('Imagem pronta');return;}
+      try{await navigator.share({files:[arq],title:'Escudo geomântico'});aviso('Imagem pronta');return;}
       catch(err){if(err&&err.name==='AbortError'){av.textContent='';return;}}
     }
     const url=URL.createObjectURL(blob);
     const a=document.createElement('a');
-    a.href=url;a.download='mapa-geomantico.png';
+    a.href=url;a.download='escudo-geomantico.png';
     document.body.appendChild(a);a.click();a.remove();
     setTimeout(()=>URL.revokeObjectURL(url),1000);
     aviso('Imagem salva');
