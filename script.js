@@ -4,22 +4,22 @@
 // ==CORE==
 const ELEM=['Ar','Fogo','Água','Terra'];
 const FIGURAS=[
-  {nome:'Populus',pt:'o Povo',l:[2,2,2,2],comp:'Terra sobre Terra',cor:'#66CCCC',desc:'A matéria a ser trabalhada. A individualidade coletiva. O povo. Representa caos, desordem, aleatoriedade'},
-  {nome:'Via',pt:'o Caminho',l:[1,1,1,1],comp:'Fogo sobre Fogo',cor:'#9966FF',desc:'Movimento direcionado; mudança, jornada, transição e avanço. Possui a decisão, embora seja instável e possa inverter a situação.'},
-  {nome:'Laetitia',pt:'a Alegria',l:[1,2,2,2],comp:'Água sobre Terra',cor:'#CC99CC',desc:'Elementos complementares. O solo irrigado que permite a alimentação e o crescimento dos seres vivos. Elevação do ânimo, boas notícias, sucesso, saúde e movimento para cima.'},
-  {nome:'Caput Draconis',pt:'a Cabeça do Dragão',l:[2,1,1,1],comp:'Ar sobre Fogo',cor:'#990099',desc:'Algo que sobe, voltado para o céu, ascendente. Elevação metafísica e espiritual, desapego do material.'},
-  {nome:'Rubeus',pt:'o Vermelho',l:[2,1,2,2],comp:'Ar sobre Terra',cor:'#CC0099',desc:'Movimento em busca de objetivos materiais. Agitação. Turbulência, estresse, força de vontade, impulso.'},
-  {nome:'Puella',pt:'a Jovem',l:[1,2,1,1],comp:'Água sobre Fogo',cor:'#996699',desc:'A disposição dos pontos lembra o símbolo de Vênus. Possui qualidades próximas das atribuídas a Libra. Representa harmonia, paz, feminilidade.'},
-  {nome:'Fortuna Minor',pt:'a Fortuna Menor',l:[1,1,2,2],comp:'Fogo sobre Terra',cor:'#CCCCFF',desc:'O solo sendo queimado, ou preparado. A concretização parcial de objetivos. Algo positivo, mas não em totalidade; não é exatamente aquilo que se espera.'},
-  {nome:'Fortuna Major',pt:'a Fortuna Maior',l:[2,2,1,1],comp:'Terra sobre Fogo',cor:'#9999CC',desc:'A concretização de objetivos. A argila sendo enrijecida pelo cozimento na forma desejada. Algo positivo, completo, satisfatório, grande realização.'},
-  {nome:'Albus',pt:'o Branco',l:[2,2,1,2],comp:'Terra sobre Água',cor:'#669999',desc:'A água no subsolo. O controle das emoções. A experiência e o conhecimento. Paz interior.'},
-  {nome:'Puer',pt:'o Infante',l:[1,1,2,1],comp:'Fogo sobre Ar',cor:'#66CCCC',desc:'A disposição dos pontos lembra o símbolo de Marte. Possui qualidades próximas das atribuídas a Áries. Significa masculinidade, força, energia, impulso, ação, agressividade, conflito.'},
-  {nome:'Amissio',pt:'a Perda',l:[1,2,1,2],comp:'Água sobre Água',cor:'#009966',desc:'Excesso de emoções. Destempero, perdas.'},
-  {nome:'Acquisitio',pt:'o Ganho',l:[2,1,2,1],comp:'Ar sobre Ar',cor:'#006633',desc:'Predomínio do racional, intelectual. Movimento, ganhos.'},
-  {nome:'Conjunctio',pt:'a Conjunção',l:[2,1,1,2],comp:'Ar sobre Água',cor:'#99CC66',desc:'Encontro, união, contato, acordo, parceria, comunicação e recuperação do que estava perdido. O ponto onde dois caminhos se tocam.'},
-  {nome:'Carcer',pt:'a Prisão',l:[1,2,2,1],comp:'Água sobre Ar',cor:'#CCCC99',desc:'Aprisionamento; algo limitante e problemas maiores do que a capacidade de resolvê-los. Impotência.'},
-  {nome:'Cauda Draconis',pt:'a Cauda do Dragão',l:[1,1,1,2],comp:'Fogo sobre Água',cor:'#FFFF00',desc:'Algo que desce, voltado para baixo, para o escuro, descendente; materialismo, apego, decadência, término, a morte do espírito.'},
-  {nome:'Tristitia',pt:'a Tristeza',l:[2,2,2,1],comp:'Terra sobre Ar',cor:'#996600',desc:'Tristeza, melancolia, sofrimento, solidão, depressão, desânimo, perda de ânimo, desmotivação.'}
+  {nome:'Populus',pt:'o Povo',l:[2,2,2,2],comp:'Terra sobre Terra',cor:'#66CCCC',desc:'A matéria a ser trabalhada; a individualidade coletiva, o povo. Representa caos, desordem, aleatoriedade. Contém o maior número de pontos, evoca a ideia de multidão e todas as nuanças que esta possa conter, ou seja,  é uma massa difícil de mobilizar e igualmente difícil de controlar.'},
+  {nome:'Via',pt:'o Caminho',l:[1,1,1,1],comp:'Fogo sobre Fogo',cor:'#9966FF',desc:'Movimento direcionado; mudança, jornada, transição e avanço. Possui a decisão, embora seja instável e possa inverter a situação. É a figura que contém o menor número de pontos pois evoca a ideia de uma busca solitária, de um esforço necessário para encontrar o caminho certo.'},
+  {nome:'Laetitia',pt:'a Alegria',l:[1,2,2,2],comp:'Água sobre Terra',cor:'#CC99CC',desc:'O solo irrigado que permite a alimentação e o crescimento dos seres vivos, alegria. Elevação do ânimo e otimismo, boas notícias, sucesso, saúde e movimento para cima. Satisfação e prazeres da vida, beneficiência'},
+  {nome:'Tristitia',pt:'a Tristeza',l:[2,2,2,1],comp:'Terra sobre Ar',cor:'#996600',desc:'Tristeza, melancolia, sofrimento, solidão, depressão, desânimo, perda de ânimo, desmotivação. Derrota; falta de confiança, imobilidade e passividade.'}
+  {nome:'Caput Draconis',pt:'a Cabeça do Dragão',l:[2,1,1,1],comp:'Ar sobre Fogo',cor:'#990099',desc:'Algo que sobe, voltado para o céu, ascendente. Elevação metafísica e espiritual, desapego do material. Figura positiva que evoca a ideia de uma realização, é a vontade dirigida pela cabeça, isto é, a consciência. Lúcida e objetiva.'},
+  {nome:'Cauda Draconis',pt:'a Cauda do Dragão',l:[1,1,1,2],comp:'Fogo sobre Água',cor:'#FFFF00',desc:'Algo que desce, voltado para baixo, para o escuro, descendente; materialismo, apego, decadência, término, a morte do espírito. Figura negativa; são os baixos instintos que orientam a ação, o que torna possível a falsidade e a mentira.'},
+  {nome:'Rubeus',pt:'o Vermelho',l:[2,1,2,2],comp:'Ar sobre Terra',cor:'#CC0099',desc:'Movimento em busca de objetivos materiais, significa agitação, turbulência, estresse, força de vontade, impulso. Figura de luta, de combate e de violência. Destrói e causa a explosão de tudo, mas com o objetivo de renovar, de reconstruir.'},
+  {nome:'Albus',pt:'o Branco',l:[2,2,1,2],comp:'Terra sobre Água',cor:'#669999',desc:'O controle das emoções; a experiência e o conhecimento, paz interior. É a figura da paz, pois acalma, unifica, regulariza; corresponde às aspirações mais nobres.'},
+  {nome:'Puella',pt:'a Jovem',l:[1,2,1,1],comp:'Água sobre Fogo',cor:'#996699',desc:'A disposição dos pontos lembra o símbolo de Vênus e possui qualidades próximas das atribuídas a Libra. Representa harmonia, paz, feminilidade, gentileza, conciliação e delicadeza.'},
+  {nome:'Puer',pt:'o Infante',l:[1,1,2,1],comp:'Fogo sobre Ar',cor:'#66CCCC',desc:'A disposição dos pontos lembra o símbolo de Marte. Possui qualidades próximas das atribuídas a Áries. Significa masculinidade, força, energia, impulso, ação, agressividade, conflito. É o adolescente cheio de vida, de energia e de paixão; é uma figura de independência, entusiasmo, até de rebelião.'},
+  {nome:'Fortuna Minor',pt:'a Fortuna Menor',l:[1,1,2,2],comp:'Fogo sobre Terra',cor:'#CCCCFF',desc:'O solo sendo queimado, ou preparado; a concretização parcial de objetivos. Algo positivo, mas não em totalidade; não é exatamente aquilo que se espera. Também pode representar sucesso inesperado, mas de curta duração; é a oportunidade a ser agarrada mas que pode rapidamente escapar.'},
+  {nome:'Fortuna Major',pt:'a Fortuna Maior',l:[2,2,1,1],comp:'Terra sobre Fogo',cor:'#9999CC',desc:'A Figura mais benéfica entre todas; a mais privilegiadas; a concretização de objetivos. A argila sendo enrijecida pelo cozimento na forma desejada, indica algo positivo, completo, satisfatório, grande realização. É o sucesso no sentido de uma revelação; torna o ser receptivo em relação às boas influências, protege e satisfaz.'},
+  {nome:'Amissio',pt:'a Perda',l:[1,2,1,2],comp:'Água sobre Água',cor:'#009966',desc:'Excesso de emoções, destempero, perdas, sacrífico. Figura de renúncia, é negativa e obriga à restrição em todos os planos.'},
+  {nome:'Acquisitio',pt:'o Ganho',l:[2,1,2,1],comp:'Ar sobre Ar',cor:'#006633',desc:'É uma figura positiva que representa a aquisição e o ganho; o mérito, a posse, corresponde ao progresso, à melhora, principalmente em termos materiais.'},
+  {nome:'Conjunctio',pt:'a Conjunção',l:[2,1,1,2],comp:'Ar sobre Água',cor:'#99CC66',desc:'A figura do entendimento, do acordo; simboliza as associações, os contatos, os reencontros e os interesses comuns. Unidade, coletividade, parceria e comunicação.'},
+  {nome:'Carcer',pt:'a Prisão',l:[1,2,2,1],comp:'Água sobre Ar',cor:'#CCCC99',desc:'Aprisionamento; é uma figura negativa, que representa um bloqueio, uma parada, uma privação de liberdade e autonomia. Por analogia, tem também um sentido de proteção do que já foi adquirido: bloqueia, mas conserva. É algo limitante e simboliza problemas maiores do que a capacidade de resolvê-los. Impotência.'},
 ];
 const POR_CHAVE={};
 FIGURAS.forEach((f,i)=>{POR_CHAVE[f.l.join('')]=i;});
@@ -154,7 +154,7 @@ function renderLeitura(N){
 
 function celula(n,linha,col){
   const f=figura(n.l);
-  const cls='cell'+(n.papel==='Juiz'?' juiz':'')+(n.papel==='Conselho'?' conselho':'')+(n.papel==='Tia 4'?' sep-e':'')+(n.papel==='Mãe 1'?' sep-d':'');
+  const cls='cell'+(n.papel==='Juiz'?' juiz':'')+(n.papel==='Conselho'?' conselho':'');
   return `<button type="button" class="${cls}" style="grid-row:${linha};grid-column:${col} / span 2" data-open="${n.id}" ${f?'':'disabled'} aria-label="${n.rot}: ${f?f.nome:'ainda sem figura'}">
     <span class="cell-rot">${n.papel}</span>
     ${tile(n.l)}
@@ -165,15 +165,16 @@ function celula(n,linha,col){
 /* Escudo Geomântico em grade de 16 colunas (cada casa ocupa 2).
    Direita: mães e, abaixo, as filhas. Esquerda: tias e, abaixo, as sobrinhas.
    Cada grupo é lido da esquerda para a direita (1ª, 2ª, 3ª, 4ª).
-   Depois: Futuro (esquerda), Juiz (centro) e Passado (direita); o Conselho fica na ponta. */
+   Depois: Futuro (esquerda) e Passado (direita), Juiz e, na ponta, o Conselho. */
 function renderMapa(N){
   const pos=[
     [N.T[0],1,1],[N.T[1],1,3],[N.T[2],1,5],[N.T[3],1,7],
     [N.M[0],1,9],[N.M[1],1,11],[N.M[2],1,13],[N.M[3],1,15],
     [N.S[0],2,2],[N.S[1],2,6],
     [N.F[0],2,10],[N.F[1],2,14],
-    [N.FU,3,4],[N.J,3,8],[N.P,3,12],
-    [N.C,4,8]
+    [N.FU,3,4],[N.P,3,12],
+    [N.J,4,8],
+    [N.C,5,8]
   ];
   const cel=pos.map(([n,r,c])=>celula(n,r,c)).join('');
   $('#mapa').innerHTML=`<div class="escudo"><svg class="escudo-borda" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M0 0H100V50C100 78 74 90 50 100C26 90 0 78 0 50Z"/></svg><div class="escudo-grade">${cel}</div></div>`;
@@ -243,45 +244,40 @@ async function salvarImagem(){
   try{
     if(document.fonts&&document.fonts.ready){await document.fonts.ready;}
     $('#foto-rodape').textContent='Escudo Geomântico · '+new Date().toLocaleDateString('pt-BR');
+    const alvo=$('#captura');
     const bg=getComputedStyle(document.body).backgroundColor;
-    /* a imagem sai sempre com a mesma largura e proporção, no celular ou no computador.
-       A captura usa uma cópia fora da tela, com o layout da imagem já aplicado e medido. */
+    /* a imagem sai sempre com a mesma largura e proporção, no celular ou no computador */
     const LARGURA=820;
-    const orig=$('#captura');
-    const c=orig.cloneNode(true);
-    c.removeAttribute('id');
-    c.classList.add('foto');
-    c.style.cssText='position:absolute;left:-10000px;top:0;width:'+LARGURA+'px;margin:0;';
-    const mp=$('#mapa',c);if(mp){mp.style.overflow='visible';}
-    document.body.appendChild(c);
-    let canvas;
-    try{
-      /* SVGs viram imagem na captura e perdem o CSS da página: resolve as cores para valores fixos */
-      c.querySelectorAll('svg [class]').forEach(el=>{
-        const cs=getComputedStyle(el);
-        ['fill','stroke','stroke-width','stroke-dasharray'].forEach(p=>{
-          const v=cs.getPropertyValue(p);
-          if(v){el.setAttribute(p,v);}
+    const canvas=await html2canvas(alvo,{
+      backgroundColor:bg,scale:3,useCORS:true,logging:false,
+      windowWidth:1100,windowHeight:1600,scrollX:0,scrollY:0,
+      onclone:doc=>{
+        const c=doc.getElementById('captura');
+        c.classList.add('foto');
+        c.style.width=LARGURA+'px';
+        const mapa=doc.getElementById('mapa');
+        if(mapa){mapa.style.overflow='visible';}
+        /* SVGs viram imagem na captura e perdem o CSS da página: resolve as cores para valores fixos */
+        c.querySelectorAll('svg [class]').forEach(el=>{
+          const cs=doc.defaultView.getComputedStyle(el);
+          ['fill','stroke','stroke-width','stroke-dasharray'].forEach(p=>{
+            const v=cs.getPropertyValue(p);
+            if(v){el.setAttribute(p,v);}
+          });
         });
-      });
-      /* borda do escudo em pixels reais, medida no layout final, sem esticar o desenho */
-      const esc=$('.escudo',c),sv=$('.escudo-borda',c);
-      if(esc&&sv){
-        const w=esc.offsetWidth,h=esc.offsetHeight,m=2;
-        sv.setAttribute('viewBox','0 0 '+w+' '+h);
-        sv.setAttribute('preserveAspectRatio','none');
-        const p=$('path',sv);
-        p.setAttribute('d',`M${m} ${m}H${w-m}V${h*.5}C${w-m} ${h*.78} ${w*.74} ${h*.9} ${w/2} ${h-m}C${w*.26} ${h*.9} ${m} ${h*.78} ${m} ${h*.5}Z`);
-        p.setAttribute('stroke-width','2.5');
-        p.removeAttribute('vector-effect');
+        /* borda do escudo em pixels reais, sem esticar o desenho */
+        const esc=c.querySelector('.escudo'),sv=c.querySelector('.escudo-borda');
+        if(esc&&sv){
+          const w=esc.offsetWidth,h=esc.offsetHeight,m=2;
+          sv.setAttribute('viewBox','0 0 '+w+' '+h);
+          sv.setAttribute('preserveAspectRatio','none');
+          const p=sv.querySelector('path');
+          p.setAttribute('d',`M${m} ${m}H${w-m}V${h*.5}C${w-m} ${h*.78} ${w*.74} ${h*.9} ${w/2} ${h-m}C${w*.26} ${h*.9} ${m} ${h*.78} ${m} ${h*.5}Z`);
+          p.setAttribute('stroke-width','2.5');
+          p.removeAttribute('vector-effect');
+        }
       }
-      canvas=await html2canvas(c,{
-        backgroundColor:bg,scale:3,useCORS:true,logging:false,
-        windowWidth:1100,windowHeight:1600,scrollX:0,scrollY:0
-      });
-    }finally{
-      c.remove();
-    }
+    });
     const blob=await new Promise(res=>canvas.toBlob(res,'image/png'));
     if(!blob) throw new Error('sem imagem');
     const arq=new File([blob],'escudo-geomantico.png',{type:'image/png'});
