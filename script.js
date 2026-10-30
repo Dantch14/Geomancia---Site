@@ -162,6 +162,36 @@ function celula(n,linha,col){
     <span class="cell-f">${n.f}</span>
   </button>`;
 }
+/* Contorno do escudo: uma única definição (a forma original), usada na tela,
+   no teste de encaixe e na imagem salva. m = margem para o traço não ser cortado. */
+function caminhoEscudo(w,h,m){
+  m=m||0;
+  return `M${m} ${m}H${w-m}V${h*.5}C${w-m} ${h*.78} ${w*.74} ${h*.9} ${w/2} ${h-m}C${w*.26} ${h*.9} ${m} ${h*.78} ${m} ${h*.5}Z`;
+}
+/* Confere se os quatro cantos de cada casa (com `folga` px de respiro) estão dentro do contorno. */
+function cabeNoEscudo(esc,folga){
+  const w=esc.offsetWidth,h=esc.offsetHeight,e=esc.getBoundingClientRect();
+  const ctx=document.createElement('canvas').getContext('2d');
+  const p=new Path2D(caminhoEscudo(w,h,0));
+  return Array.from(esc.querySelectorAll('.cell')).every(c=>{
+    const r=c.getBoundingClientRect();
+    const x0=r.left-e.left-folga,x1=r.right-e.left+folga,y0=r.top-e.top-folga,y1=r.bottom-e.top+folga;
+    return [[x0,y0],[x1,y0],[x0,y1],[x1,y1]].every(([x,y])=>ctx.isPointInPath(p,x,y));
+  });
+}
+/* O Conselho fica na ponta, onde o escudo é mais estreito. Se não couber, aumenta o espaço
+   abaixo da grade: o escudo cresce e a ponta desce até todas as casas ficarem dentro. */
+function ajustarEscudo(esc,folga){
+  const g=esc&&esc.querySelector('.escudo-grade');
+  if(!g) return;
+  folga=folga==null?8:folga;
+  g.style.paddingBottom='';
+  for(let i=0;i<80&&!cabeNoEscudo(esc,folga);i++){
+    g.style.paddingBottom=(parseFloat(getComputedStyle(g).paddingBottom)+8)+'px';
+  }
+}
+function ajustarEscudoAtual(){ajustarEscudo($('#mapa .escudo'));}
+
 /* Escudo Geomântico em grade de 16 colunas (cada casa ocupa 2).
    Direita: mães e, abaixo, as filhas. Esquerda: tias e, abaixo, as sobrinhas.
    Cada grupo é lido da esquerda para a direita (1ª, 2ª, 3ª, 4ª).
@@ -178,6 +208,7 @@ function renderMapa(N){
   ];
   const cel=pos.map(([n,r,c])=>celula(n,r,c)).join('');
   $('#mapa').innerHTML=`<div class="escudo"><svg class="escudo-borda" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M0 0H100V50C100 78 74 90 50 100C26 90 0 78 0 50Z"/></svg><div class="escudo-grade">${cel}</div></div>`;
+  ajustarEscudoAtual();
   const notas=[
     ['Mães','A tiragem física, nas quatro posições. Ficam à direita, da 1ª à 4ª, lidas da esquerda para a direita.'],
     ['Tias','Cada tia reúne uma mesma linha das quatro mães: Ar, Fogo, Água e Terra. Ficam à esquerda, da 1ª à 4ª.'],
@@ -236,6 +267,35 @@ function renderPergunta(){
   $('#pergunta-cont').textContent=`${estado.pergunta.length} / 300`;
 }
 
+/* Imagem salva: a borda vira um PNG desenhado aqui, com as cores já resolvidas.
+   (O html2canvas transforma <svg> em imagem isolada, sem o CSS da página, e a borda saía sem
+   cor e com a altura errada.) A medida vem de uma cópia fora da tela, com as fontes já carregadas. */
+function medirEscudoFoto(alvo,largura){
+  const probe=alvo.cloneNode(true);
+  probe.querySelectorAll('[id]').forEach(e=>e.removeAttribute('id'));
+  probe.removeAttribute('id');
+  probe.classList.add('foto');
+  Object.assign(probe.style,{position:'fixed',left:'-10000px',top:'0',width:largura+'px',visibility:'hidden'});
+  document.body.appendChild(probe);
+  try{
+    const esc=probe.querySelector('.escudo');
+    ajustarEscudo(esc,10);
+    const g=esc.querySelector('.escudo-grade');
+    return {w:esc.offsetWidth,h:esc.offsetHeight,pb:getComputedStyle(g).paddingBottom};
+  }finally{probe.remove();}
+}
+function bordaEscudoPNG(w,h){
+  const k=3,cv=document.createElement('canvas');
+  cv.width=Math.round(w*k);cv.height=Math.round(h*k);
+  const ctx=cv.getContext('2d');
+  ctx.scale(k,k);
+  const cs=getComputedStyle($('#mapa .escudo-borda path'));
+  const p=new Path2D(caminhoEscudo(w,h,2));
+  ctx.fillStyle=cs.fill;ctx.fill(p);
+  ctx.lineWidth=2.5;ctx.lineJoin='round';ctx.strokeStyle=cs.stroke;ctx.stroke(p);
+  return cv.toDataURL('image/png');
+}
+
 async function salvarImagem(){
   const btn=$('#btn-foto'),av=$('#aviso-img');
   const aviso=t=>{av.textContent=t;setTimeout(()=>{av.textContent='';},2600);};
@@ -246,15 +306,17 @@ async function salvarImagem(){
     $('#foto-rodape').textContent='Escudo Geomântico · '+new Date().toLocaleDateString('pt-BR');
     const alvo=$('#captura');
     const bg=getComputedStyle(document.body).backgroundColor;
+    const LARGURA_FOTO=820;
+    const escFoto=medirEscudoFoto(alvo,LARGURA_FOTO);
+    const bordaPNG=bordaEscudoPNG(escFoto.w,escFoto.h);
     /* a imagem sai sempre com a mesma largura e proporção, no celular ou no computador */
-    const LARGURA=820;
     const canvas=await html2canvas(alvo,{
       backgroundColor:bg,scale:3,useCORS:true,logging:false,
       windowWidth:1100,windowHeight:1600,scrollX:0,scrollY:0,
       onclone:doc=>{
         const c=doc.getElementById('captura');
         c.classList.add('foto');
-        c.style.width=LARGURA+'px';
+        c.style.width=LARGURA_FOTO+'px';
         const mapa=doc.getElementById('mapa');
         if(mapa){mapa.style.overflow='visible';}
         /* SVGs viram imagem na captura e perdem o CSS da página: resolve as cores para valores fixos */
@@ -265,16 +327,13 @@ async function salvarImagem(){
             if(v){el.setAttribute(p,v);}
           });
         });
-        /* borda do escudo em pixels reais, sem esticar o desenho */
-        const esc=c.querySelector('.escudo'),sv=c.querySelector('.escudo-borda');
-        if(esc&&sv){
-          const w=esc.offsetWidth,h=esc.offsetHeight,m=2;
-          sv.setAttribute('viewBox','0 0 '+w+' '+h);
-          sv.setAttribute('preserveAspectRatio','none');
-          const p=sv.querySelector('path');
-          p.setAttribute('d',`M${m} ${m}H${w-m}V${h*.5}C${w-m} ${h*.78} ${w*.74} ${h*.9} ${w/2} ${h-m}C${w*.26} ${h*.9} ${m} ${h*.78} ${m} ${h*.5}Z`);
-          p.setAttribute('stroke-width','2.5');
-          p.removeAttribute('vector-effect');
+        /* borda do escudo: PNG pronto, no tamanho medido, e o mesmo espaço abaixo da grade */
+        const sv=c.querySelector('.escudo-borda'),g=c.querySelector('.escudo-grade');
+        if(sv&&g){
+          g.style.paddingBottom=escFoto.pb;
+          const img=doc.createElement('img');
+          img.className='escudo-borda';img.alt='';img.src=bordaPNG;
+          sv.replaceWith(img);
         }
       }
     });
@@ -421,6 +480,9 @@ $('#pergunta').addEventListener('input',e=>{
   renderPergunta();
   $('#btn-copiar').dataset.texto=textoLeitura(nos(calcular(estado.maes,estado.regra)));
 });
+
+window.addEventListener('resize',ajustarEscudoAtual);
+if(document.fonts&&document.fonts.ready){document.fonts.ready.then(ajustarEscudoAtual);}
 
 montarMaes();
 carregar();
