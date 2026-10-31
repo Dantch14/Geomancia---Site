@@ -1,3 +1,14 @@
+/* ============================================================
+   estilos/style.css
+   O CSS do site original, mantido IGUAL para a aparência ser idêntica.
+   As classes (.tile, .cell, .escudo, .mae...) são as mesmas que os
+   componentes React usam em `className`.
+
+   Mapa rápido: variáveis de cor e modo escuro (topo) -> cabeçalho ->
+   seções -> botões -> peças -> mães -> pergunta -> leitura -> escudo ->
+   imagem salva (.foto) -> catálogo -> painel -> telas maiores (@media).
+   ============================================================ */
+
 :root{color-scheme:light}
 body{margin:0}
 [hidden]{display:none!important}

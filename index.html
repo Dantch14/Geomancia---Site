@@ -1,133 +1,21 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mapa Geomântico</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Hanken+Grotesk:wght@400;500;600&family=IM+Fell+English:ital@0;1&display=swap">
-<link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mapa Geomântico</title>
+  <!-- Fontes do Google, as mesmas do site original -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Hanken+Grotesk:wght@400;500;600&family=IM+Fell+English:ital@0;1&display=swap">
 </head>
 <body>
-<header class="top">
-  <div class="wrap">
-    <p class="eyebrow">Geomancia · cálculo da tiragem</p>
-    <h1>Mapa Geomântico</h1>
-    <p class="lead">Jogue as pedras fora do site e informe aqui as quatro mães. Tias, filhas, sobrinhas, passado, futuro, juiz e conselho saem calculados na hora.</p>
-  </div>
-</header>
-
-<main>
-  <section class="sec" aria-labelledby="h-pergunta">
-    <div class="wrap">
-      <h2 id="h-pergunta">A pergunta</h2>
-      <p class="sub">Escreva a pergunta feita para esta tiragem, ela aparecerá no mapa completo e na imagem salva.</p>
-      <div class="pergunta">
-        <label for="pergunta" class="vh">Pergunta da tiragem</label>
-        <textarea id="pergunta" rows="2" maxlength="300" placeholder="Ex.: Como será meu futuro acadêmico?"></textarea>
-        <span class="status" id="pergunta-cont">0 / 300</span>
-      </div>
-    </div>
-  </section>
-
-  <section class="sec" aria-labelledby="h-maes">
-    <div class="wrap">
-      <h2 id="h-maes">As quatro mães</h2>
-      <p class="sub">Cada figura tem quatro linhas, de cima para baixo. Em cada uma, marque um ponto (ímpar) ou dois pontos (par). Também dá para escolher a figura pelo nome.</p>
-      <div class="legenda" aria-label="Legenda das linhas">
-        <span>De cima para baixo</span>
-        <span class="el" style="--c:var(--ar)">Ar</span>
-        <span class="el" style="--c:var(--fogo)">Fogo</span>
-        <span class="el" style="--c:var(--agua)">Água</span>
-        <span class="el" style="--c:var(--terra)">Terra</span>
-        <span>● ímpar</span>
-        <span>●● par</span>
-      </div>
-      <div class="tools">
-        <button type="button" class="btn" id="btn-exemplo">Carregar exemplo</button>
-        <button type="button" class="btn" id="btn-limpar">Limpar</button>
-        <span class="status" id="status" role="status"></span>
-      </div>
-      <div class="maes" id="maes"></div>
-    </div>
-  </section>
-
-  <section class="sec" aria-labelledby="h-mapa">
-    <div class="wrap">
-      <div class="sec-head">
-        <div>
-          <h2 id="h-mapa">Mapa completo</h2>
-          <p class="sub">O Escudo Geomântico: as 15 casas, da tiragem ao juiz, mais o conselho. Toque numa figura para ver o significado.</p>
-        </div>
-        <div class="sec-act">
-          <span class="status" id="aviso-img" role="status"></span>
-          <button type="button" class="btn btn-primario" id="btn-foto"><svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3v10M6 9.5l4 4 4-4M4 16.5h12"/></svg>Salvar imagem</button>
-        </div>
-      </div>
-      <div class="regra">
-        <div class="seg" role="radiogroup" aria-labelledby="regra-t">
-        </div>
-        <p class="regra-nota" id="regra-nota"></p>
-      </div>
-      <div id="captura" class="captura">
-        <div class="foto-cab">
-          <p class="foto-eyebrow">Mapa Geomântico</p>
-          <p class="foto-titulo">Escudo Geomântico</p>
-        </div>
-        <div class="mapa-pergunta" id="mapa-pergunta" hidden>
-          <div class="mapa-pergunta-rot">Pergunta</div>
-          <p id="mapa-pergunta-txt"></p>
-        </div>
-        <div id="mapa"></div>
-        <p class="foto-rodape" id="foto-rodape"></p>
-      </div>
-      <div class="escudo-notas" id="mapa-notas"></div>
-      <p class="soma">Soma de linhas: ímpar + par = ímpar · ímpar + ímpar = par · par + par = par</p>
-    </div>
-  </section>
-
-  <section class="sec" aria-labelledby="h-leitura">
-    <div class="wrap">
-      <div class="sec-head">
-        <div>
-          <h2 id="h-leitura">Leitura</h2>
-          <p class="sub">Passado, futuro, juiz e conselho da tiragem.</p>
-        </div>
-        <div class="sec-act">
-          <span class="status" id="aviso" role="status"></span>
-          <button type="button" class="btn" id="btn-copiar">Copiar leitura</button>
-        </div>
-      </div>
-      <div class="leitura" id="leitura"></div>
-    </div>
-  </section>
-
-  <section class="sec" aria-labelledby="h-cat">
-    <div class="wrap">
-      <h2 id="h-cat">As 16 figuras</h2>
-      <p class="sub" style="margin-bottom:16px">Todas as combinações possíveis de quatro linhas. As figuras que aparecem no seu mapa levam a posição marcada.</p>
-      <div class="busca">
-        <label for="busca" class="vh">Buscar figura</label>
-        <input id="busca" type="search" placeholder="Buscar por nome ou elemento" autocomplete="off">
-      </div>
-      <div class="cat-grid" id="catalogo"></div>
-      <p class="vazio" id="cat-vazio" hidden>Nenhuma figura encontrada.</p>
-    </div>
-  </section>
-  
-</main>
-
-<div class="sheet" id="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="sheet-title">
-  <div class="sheet-fundo" data-close></div>
-  <div class="sheet-painel">
-    <button type="button" class="sheet-x" data-close aria-label="Fechar">×</button>
-    <div id="sheet-conteudo"></div>
-  </div>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="script.js"></script>
+  <!--
+    Este é o ÚNICO HTML do projeto, e quase vazio de propósito.
+    O React preenche esta <div id="root"> com todos os componentes
+    (ver src/main.jsx). O CSS é importado dentro do main.jsx.
+  -->
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
 </body>
 </html>
-
